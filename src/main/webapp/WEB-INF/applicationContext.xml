@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 属性文件读入 -->
+    <bean id="db-config"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:db_config.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 数据源定义，使用jdbc数据源 -->
+    <!-- 实际的JDBC连接属性从一个属性文件（properties file）解析而来，在这个属性文件里，关键字与提供的${占位符}互相对应， -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName">
+            <value>${db.dirverClassName}</value>
+        </property>
+        <property name="url">
+            <value>${db.url}</value>
+        </property>
+        <property name="username">
+            <value>${db.username}</value>
+        </property>
+        <property name="password">
+            <value>${db.password}</value>
+        </property>
+    </bean>
+
+    <!-- 配置JdbcTemplate -->
+    <bean id="template" class="org.springframework.jdbc.core.JdbcTemplate"
+          abstract="false" lazy-init="false" autowire="default"
+          p:dataSource-ref="dataSource"
+    />
+
+    <!--配置View,引入p标签-->
+    <bean id="view" class="model.View"
+          p:loginSuccess="loginSuccess"
+          p:login="login"
+          p:regist="regist"
+          p:registSuccess="registSuccess"
+          p:registFail="registFail"
+    />
+    <!--&lt;!&ndash; 定义ToRegistAction &ndash;&gt;-->
+    <!--<bean id="toRegistAction"-->
+          <!--class="actions.toregistAction">-->
+    <!--</bean>-->
+    <!--&lt;!&ndash; 定义ToLoginAction &ndash;&gt;-->
+    <!--<bean id="toLoginAction"-->
+          <!--class="actions.tologinAction">-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash; 添加处理器配置 &ndash;&gt;-->
+    <!--&lt;!&ndash;-定义LoginAction类&ndash;&gt;-->
+    <!--<bean id="loginAction"-->
+          <!--class="actions.loginAction">-->
+        <!--&lt;!&ndash;<property name="commandClass">&ndash;&gt;-->
+            <!--&lt;!&ndash;<value>model.loginForm</value>&ndash;&gt;-->
+        <!--&lt;!&ndash;</property>&ndash;&gt;-->
+        <!--&lt;!&ndash; 指定失败要返回的页面 &ndash;&gt; &lt;!&ndash; 需修改 &ndash;&gt;-->
+        <!--<property name="FailView">-->
+            <!--<value>loginFail</value>-->
+        <!--</property>-->
+        <!--&lt;!&ndash; 指定成功要返回的页面 &ndash;&gt;-->
+        <!--<property name="SuccessView">-->
+            <!--<value>loginSuccess</value>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash; 定义RegistAction &ndash;&gt;-->
+    <!--<bean id="registAction"-->
+          <!--class="actions.registAction">-->
+        <!--&lt;!&ndash;<property name="commandClass">&ndash;&gt;-->
+            <!--&lt;!&ndash;<value>model.registForm</value>&ndash;&gt;-->
+        <!--&lt;!&ndash;</property>&ndash;&gt;-->
+        <!--&lt;!&ndash; 注册成功返回的页面 &ndash;&gt;-->
+        <!--<property name="SuccessView">-->
+            <!--<value>registSuccess</value>-->
+        <!--</property>-->
+        <!--&lt;!&ndash; 取消注册返回的页面 &ndash;&gt;-->
+        <!--<property name="FailView">-->
+            <!--<value>registFail</value>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+</beans>
